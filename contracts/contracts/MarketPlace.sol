@@ -14,6 +14,9 @@ contract MarketPlace {
 
     // TODO
     // integrate oracles
+    // dai refunds
+    // fix the rate for interest
+    // author royalties
 
     constructor (address _nftAddress) {
         nftContract = IPublicLock(_nftAddress);
@@ -54,6 +57,8 @@ contract MarketPlace {
     }
 
     function returnNFT(uint256 _tokenId) public {
+        // calculate amount to pay back
+
         nftContract.unlendKey(address(this), _tokenId);
         delete idToDeets[_tokenId];
     }
@@ -82,6 +87,7 @@ contract MarketPlace {
         // if the time is greater than 15 days, then return true
     }
 
+    // might not need this
     function forceReturn(uint256 _tokenId) internal {
         // TODO
         // somehow return outstanding balance
