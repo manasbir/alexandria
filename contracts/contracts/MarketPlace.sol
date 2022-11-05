@@ -12,7 +12,6 @@ contract MarketPlace {
 
     // TODO
     // integrate oracles ??
-    // eth refunds
     // json web app
 
     constructor (address _nftAddress) {
@@ -44,8 +43,7 @@ contract MarketPlace {
     function borrowNFT(uint256 _tokenId) public payable {
         // charge user
         require(nftContract.ownerOf(_tokenId) == address(this));
-        require(msg.value > idToBook[_tokenId].price);//find unit of price to dai
-        //DAI.transferFrom(msg.sender, address(this), _amount);
+        require(msg.value > idToBook[_tokenId].price);
         nftContract.lendKey(address(this), msg.sender, _tokenId);
         uint timeForBorrow = msg.value / idToBook[_tokenId].price * cycle;
         uint expiration = block.timestamp + timeForBorrow;
@@ -56,14 +54,13 @@ contract MarketPlace {
     function returnNFT(uint256 _tokenId) public {
         require(nftContract.ownerOf(_tokenId) == msg.sender);
         // calculate amount to pay back
-        if (idToDeets[_tokenId].expiration > block.timestamp) {
             nftContract.unlendKey(address(this), _tokenId);
-            delete idToDeets[_tokenId];
-        } else {
-            (bool sent,) = msg.sender.call{value: (idToDeets[_tokenId].expiration - block.timestamp) / cycle * idToBook[_tokenId].price}("");
-            nftContract.unlendKey(address(this), _tokenId);
-            delete idToDeets[_tokenId];
+        if (idToDeets[_tokenId].expiration < block.timestamp) {
+            uint refund = (idToDeets[_tokenId].expiration - block.timestamp) / cycle * idToBook[_tokenId].price;
+            (bool sent,) = msg.sender.call{value: refund}("");
+            authorOwed[idToBook[_tokenId].author] -= refund/10;
         }
+        delete idToDeets[_tokenId];
 
 
     }
@@ -89,5 +86,16 @@ contract MarketPlace {
 
     function addBook(uint256 _tokenId, address _author, uint256 _price) public onlyOwner {
         idToBook[_tokenId] = Book(_author, _price);
+    }
+
+    function transferAuthors(address _oldAuthor, address _newAuthor) public onlyOwner {
+        authorOwed[_newAuthor] = authorOwed[_oldAuthor];
+        delete authorOwed[_oldAuthor];
+    }
+
+    function authorClaim () public {
+        require(authorOwed[msg.sender] > 0);
+        (bool sent,) = msg.sender.call{value: authorOwed[msg.sender]}("");
+        deleteauthorOwed[msg.sender];
     }
 }
