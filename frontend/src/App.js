@@ -1,10 +1,14 @@
 import logo from './logo.svg';
-import './App.css';
+import { networks } from './utils/networks';
+import polygonLogo from './assets/polygonlogo.png';
+import ethLogo from './assets/ethlogo.png';
+import './styles/App.css';
 import React, { useEffect, useState } from "react";
 
 function App() {
 
   const [currentAccount, setCurrentAccount] = useState('');
+  const [network, setNetwork] = useState('');
 
   const connectWallet = async () => {
     try {
@@ -68,6 +72,12 @@ function App() {
               <p className="title">Web3Lib</p>
               <p className="subtitle">Read, Read, Read</p>
             </div>
+
+            <div className="right">
+              <img alt="Network logo" className="logo" src={ network.includes("Polygon") ? polygonLogo : ethLogo} />
+              { currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p> }
+            </div>
+
           </header>
         </div>
       </div>
