@@ -17,6 +17,8 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.7.3",
-    "@unlock-protocol/contracts": "^0.0.13"
+    "@unlock-protocol/contracts": "^0.0.13",
+    "dot-env": "^0.0.1",
+    "dotenv": "^16.0.3"
   }
 }
