@@ -60,7 +60,9 @@ contract MarketPlace {
             nftContract.unlendKey(address(this), _tokenId);
             delete idToDeets[_tokenId];
         } else {
-            (bool sent,) = msg.sender.call{value: (idToDeets[_tokenId].expiration - block.timestamp) / cycle}("");
+            (bool sent,) = msg.sender.call{value: (idToDeets[_tokenId].expiration - block.timestamp) / cycle * idToBook[_tokenId].price}("");
+            nftContract.unlendKey(address(this), _tokenId);
+            delete idToDeets[_tokenId];
         }
 
 
