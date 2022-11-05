@@ -2,21 +2,18 @@
 pragma solidity ^0.8.9;
 
 import "../node_modules/@unlock-protocol/contracts/dist/PublicLock/IPublicLockV12.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract MarketPlace {
     IPublicLock public nftContract;
     address public owner;
-    uint constant public timePeriod = 15 days;
-    IERC20 DAI;
+    uint constant public cycle = 15 days;
 
     // events, maybe???
 
     // TODO
-    // integrate oracles
-    // dai refunds
-    // fix the rate for interest
-    // author royalties
+    // integrate oracles ??
+    // eth refunds
+    // json web app
 
     constructor (address _nftAddress) {
         nftContract = IPublicLock(_nftAddress);
@@ -29,18 +26,14 @@ contract MarketPlace {
     }
 
     struct Book {
-        string name; // i dont like the idea of using strings
         address author;
-        uint256 price; // in wei, so we can convert into other coins later
-        // bool inUse; // can be deleted depending on unlock functionality
+        uint256 price; // in wei,price per cycle
     }
 
     struct Deets {
         uint256 tokenId;
-        address borrower;
         uint256 borrowTime;
-        uint256 amount;
-        uint256 cycles;
+        uint256 expiration;
     }
 
     mapping(uint256 => Book) public idToBook;
@@ -48,67 +41,51 @@ contract MarketPlace {
     // if we want multiple tokens, can make nested mapping
     mapping(address => uint256) public authorOwed;
 
-    function borrowNFT(uint256 _tokenId, uint _amount) public {
+    function borrowNFT(uint256 _tokenId) public payable {
         // charge user
         require(nftContract.ownerOf(_tokenId) == address(this));
-        DAI.transferFrom(msg.sender, address(this), _amount);
+        require(msg.value > idToBook[_tokenId].price);//find unit of price to dai
+        //DAI.transferFrom(msg.sender, address(this), _amount);
         nftContract.lendKey(address(this), msg.sender, _tokenId);
-        idToDeets[_tokenId] = Deets(_tokenId, msg.sender, block.timestamp, _amount, 1);
+        uint timeForBorrow = msg.value / idToBook[_tokenId].price * cycle;
+        uint expiration = block.timestamp + timeForBorrow;
+        idToDeets[_tokenId] = Deets(_tokenId, block.timestamp, expiration);
+        authorOwed[idToBook[_tokenId].author] += msg.value/10;
     }
 
     function returnNFT(uint256 _tokenId) public {
+        require(nftContract.ownerOf(_tokenId) == msg.sender);
         // calculate amount to pay back
-
-        nftContract.unlendKey(address(this), _tokenId);
-        delete idToDeets[_tokenId];
-    }
-
-    function updateFee(uint256 _tokenId) public {
-        // price will double ig
-        uint price = idToBook[_tokenId].price;
-        uint borrowTime = idToDeets[_tokenId].borrowTime;
-        // price*()
-        // x^2
-        uint newPrice = price*((block.timestamp - borrowTime) / timePeriod)**2;
-
-        if (newPrice > idToDeets[_tokenId].amount) {
-            try DAI.transferFrom(msg.sender, address(this), newPrice - idToDeets[_tokenId].amount) {
-                idToDeets[_tokenId].amount = newPrice;
-            } catch {
-                forceReturn(_tokenId);
-            }
+        if (idToDeets[_tokenId].expiration > block.timestamp) {
+            nftContract.unlendKey(address(this), _tokenId);
+            delete idToDeets[_tokenId];
+        } else {
+            (bool sent,) = msg.sender.call{value: (idToDeets[_tokenId].expiration - block.timestamp) / cycle}("");
         }
 
+
     }
 
-    function doesFeeNeedUpdate (uint256 _tokenId) public view returns (bool) {
-        uint time = block.timestamp - idToDeets[_tokenId].borrowTime;
-        return time / timePeriod > idToDeets[_tokenId].cycles; //perhaps a bug in how solidity handles division (floor error)
-        // if the time is greater than 15 days, then return true
+    function liquidate(uint256 _tokenId) public {
+        if (idToDeets[_tokenId].expiration > block.timestamp) {
+            nftContract.unlendKey(address(this), _tokenId);
+            delete idToDeets[_tokenId];
+        }
     }
 
-    // might not need this
-    function forceReturn(uint256 _tokenId) internal {
-        // TODO
-        // somehow return outstanding balance
-        nftContract.unlendKey(address(this), _tokenId);
-        delete idToDeets[_tokenId];
-
-        // if the user doesnt return the book in time, then the owner can force return
-        // the owner will get the book back
-    }
-
-    function deposit(uint256 _tokenId, uint256 _amount) public {
+    function extend (uint256 _tokenId) public payable {
         require(nftContract.ownerOf(_tokenId) == msg.sender);
-        DAI.transferFrom(msg.sender, address(this), _amount);
-        idToDeets[_tokenId].amount += _amount;
+        idToDeets[_tokenId].expiration += msg.value / idToBook[_tokenId].price * cycle;
+        authorOwed[idToBook[_tokenId].author] += msg.value/10;
     }
+
+    // owner functions
 
     function setAuthorAddress(address _authorAddress, uint256 _tokenId) public onlyOwner {
         idToBook[_tokenId].author = _authorAddress;
     }
 
-    function addBook(uint256 _tokenId, address _author, string memory _name, uint256 _price) public onlyOwner {
-        idToBook[_tokenId] = Book(_name, _author, _price);
+    function addBook(uint256 _tokenId, address _author, uint256 _price) public onlyOwner {
+        idToBook[_tokenId] = Book(_author, _price);
     }
 }
