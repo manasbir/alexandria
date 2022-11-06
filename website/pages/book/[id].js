@@ -1,4 +1,5 @@
 import {useRouter} from 'next/router'
+import Pdf from '../pdftest'
 
 const Book = () => {
 
@@ -10,7 +11,11 @@ const Book = () => {
         }}>
             this is book{id}
         </h1>
+
+        {Pdf}
     )
+
+    
 }
 
 export default Book;
