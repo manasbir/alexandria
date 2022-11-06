@@ -50,6 +50,8 @@ h1 {
     width: 200px;
     margin-right: 10%;
       margin-top: 10px;
+      position: absolute;
+        left: -500px;
 }
 
 .logo {
