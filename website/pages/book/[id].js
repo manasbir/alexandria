@@ -112,10 +112,9 @@ const connectWallet = async () => {
         
        
         <button onClick={checkIfWalletIsConnected(id)} style={{opacity: 0}}>Press me!</button>
-        <iframe src={book} style={{opacity: isOwner}}></iframe>
+        <iframe src={book} style={{opacity: isOwner} }></iframe>
         </div>
-        
-        
+                
     )
 }
 
