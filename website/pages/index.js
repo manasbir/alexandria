@@ -5,8 +5,7 @@ const market = require("../public/MarketPlace.json");
 
 
 export default function Home() {
-
-  const MARKET_ADDRESS = "0x20b9378894FbDbC41ab7bEDD96757FAd6622c1eB";
+  const MARKET_ADDRESS = "0xf46E848372417bef30dDb2b5b909752721AA6367";
 
   const [currentAccount, setCurrentAccount] = useState('');
   const [days, setDays] = useState('');
@@ -62,10 +61,12 @@ export default function Home() {
   
         console.log("Going to pop wallet now to pay gas...")
         console.log(tokenId);
-        let amount = 1000/15*days;
+        let amount = 1000*days/15;
+
         amount = Math.floor(amount);
+        amount = ethers.utils.formatUnits(amount.toString())
         console.log(amount);
-        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseUnits(amount.toString(), "wei"), gasLimit: 30000,});
+        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseEther(amount)});
         
         // (ethers.utils.formatUnits(amount.toString()))
         // Wait for the transaction to be mined
@@ -98,19 +99,19 @@ export default function Home() {
   return (
     <div className='App'>
       
-     
+     <div id="dropdown-container">
         <label for="Books">Choose a book:</label>
         <select value={tokenId} name="Books" id="books" onChange={(x) => setTokenId(x.target.value)}>
-          <option value="1">Plato's Republic</option>
-          <option value="2">Medea</option>
-          <option value="3">Odyssey</option>
-          <option value="4">Iliad</option>
-          <option value="5" >Aesop's Fables</option>
+          <option value="6">Plato's Republic</option>
+          <option value="7">Medea</option>
+          <option value="8">Odyssey</option>
+          <option value="9">Iliad</option>
+          <option value="10" >Aesop's Fables</option>
         </select>
-    
+      </div>
 
       <div className="form-container">
-      <label for="days">How many days do you want to borrow this book for?</label>
+        <label for="days">How many days do you want to borrow this book for?</label><span class="require">(min 15 days)</span>
         <input
           id="days"
 							type="text"

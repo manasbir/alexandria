@@ -76,13 +76,11 @@ function MyApp({ Component, pageProps }) {
       <div className="header-container">
         <header>
           <div className="left">
-            <p className="title">The lost library of Alexandria was </p>
-            <p className="subtitle">Read, Read, Read</p>
-          </div>
-
+              <p className="title">Welcome to the lost library pf Alexandria</p>
+              {!currentAccount && renderNotConnectedContainer()}
+              <Component {...pageProps} />
+          </div>         
           
-            {!currentAccount && renderNotConnectedContainer()}
-
         </header>
 
      
@@ -93,7 +91,7 @@ function MyApp({ Component, pageProps }) {
        
       </div>
     </div>
-    <Component {...pageProps} />
+    
 
     
 

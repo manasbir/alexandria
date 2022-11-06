@@ -29,25 +29,24 @@ contract MarketPlace {
         uint256 price; // in wei,price per cycle
     }
 
-    struct Deets {
+    struct Details {
         uint256 tokenId;
         uint256 borrowTime;
-        uint256 expiration;
+        uint256 expirationTime;
     }
 
     mapping(uint256 => Book) public idToBook;
-    mapping(uint256 => Deets) public idToDeets;
+    mapping(uint256 => Details) public idToDetails;
     // if we want multiple tokens, can make nested mapping
     mapping(address => uint256) public authorOwed;
 
-    function borrowNFT(uint256 _tokenId) public payable {
-        // charge user
+    function borrowNFT(uint256 _tokenId) external payable {
         require(nftContract.ownerOf(_tokenId) == address(this), "!sale");
-        require(msg.value > idToBook[_tokenId].price, "!eth");
+        require(msg.value >= idToBook[_tokenId].price, "!eth");
         nftContract.lendKey(address(this), msg.sender, _tokenId);
         uint timeForBorrow = msg.value / idToBook[_tokenId].price * cycle;
         uint expiration = block.timestamp + timeForBorrow;
-        idToDeets[_tokenId] = Deets(_tokenId, block.timestamp, expiration);
+        idToDetails[_tokenId] = Details(_tokenId, block.timestamp, expiration);
         authorOwed[idToBook[_tokenId].author] += msg.value/10;
     }
 
@@ -55,26 +54,24 @@ contract MarketPlace {
         require(nftContract.ownerOf(_tokenId) == msg.sender, "!owner");
         // calculate amount to pay back
             nftContract.unlendKey(address(this), _tokenId);
-        if (idToDeets[_tokenId].expiration < block.timestamp) {
-            uint refund = (idToDeets[_tokenId].expiration - block.timestamp) / cycle * idToBook[_tokenId].price;
+        if (idToDetails[_tokenId].expirationTime < block.timestamp) {
+            uint refund = (idToDetails[_tokenId].expirationTime - block.timestamp) / cycle * idToBook[_tokenId].price;
             (bool sent,) = msg.sender.call{value: refund}("");
             authorOwed[idToBook[_tokenId].author] -= refund/10;
         }
-        delete idToDeets[_tokenId];
-
-
+        delete idToDetails[_tokenId];
     }
 
-    function liquidate(uint256 _tokenId) public {
-        if (idToDeets[_tokenId].expiration > block.timestamp) {
+    function liquidate(uint256 _tokenId) external {
+        if (idToDetails[_tokenId].expirationTime > block.timestamp) {
             nftContract.unlendKey(address(this), _tokenId);
-            delete idToDeets[_tokenId];
+            delete idToDetails[_tokenId];
         }
     }
 
-    function extend (uint256 _tokenId) public payable {
+    function extend (uint256 _tokenId) external payable {
         require(nftContract.ownerOf(_tokenId) == msg.sender);
-        idToDeets[_tokenId].expiration += msg.value / idToBook[_tokenId].price * cycle;
+        idToDetails[_tokenId].expirationTime += msg.value / idToBook[_tokenId].price * cycle;
         authorOwed[idToBook[_tokenId].author] += msg.value/10;
     }
 
