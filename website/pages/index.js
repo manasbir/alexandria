@@ -1,12 +1,12 @@
 import { networks } from '../utils/networks';
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import MarketPlace from "../public/MarketPlace.json";
+const market = require("../public/MarketPlace.json");
 
 
 export default function Home() {
 
-  const MARKET_ADDRESS = "0x87DcCE68e38DA2c9B8D8577fB1AdA5Cc3baA5A72";
+  const MARKET_ADDRESS = "0x20b9378894FbDbC41ab7bEDD96757FAd6622c1eB";
 
   const [currentAccount, setCurrentAccount] = useState('');
   const [days, setDays] = useState('');
@@ -58,10 +58,16 @@ export default function Home() {
       if (ethereum) {
         const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
-        const contract = new ethers.Contract(MARKET_ADDRESS, MarketPlace.abi, signer);
+        const contract = new ethers.Contract(MARKET_ADDRESS, market.abi, signer);
   
         console.log("Going to pop wallet now to pay gas...")
-        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseEther(1000/15*days)});
+        console.log(tokenId);
+        let amount = 1000/15*days;
+        amount = Math.floor(amount);
+        console.log(amount);
+        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseUnits(amount.toString(), "wei"), gasLimit: 30000,});
+        
+        // (ethers.utils.formatUnits(amount.toString()))
         // Wait for the transaction to be mined
         const receipt = await tx.wait();
   
@@ -94,7 +100,7 @@ export default function Home() {
       
      
         <label for="Books">Choose a book:</label>
-        <select value={tokenId} name="Books" id="books" onChange={(x) => console.log(x.target.value)}>
+        <select value={tokenId} name="Books" id="books" onChange={(x) => setTokenId(x.target.value)}>
           <option value="1">Plato's Republic</option>
           <option value="2">Medea</option>
           <option value="3">Odyssey</option>
@@ -109,7 +115,7 @@ export default function Home() {
           id="days"
 							type="text"
 							value={days}
-							placeholder='How many days?'
+							placeholder='# of days'
 							onChange={e => setDays(e.target.value)}
 						/>
 

@@ -8,7 +8,7 @@ import { useState } from "react";
 function Book()  {
 
     let isOwner = 0;
-    const NFT_ADDRESS = "0xf3615f621867fd140452094f8dc6fd507f7077f3";
+    const NFT_ADDRESS = "0x0315988e4031b9f1cc1d5720b86ee9822b04bd5b";
     const [currentAccount, setCurrentAccount] = useState('');
 
 //connect wallet:

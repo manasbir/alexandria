@@ -65,16 +65,18 @@ function MyApp({ Component, pageProps }) {
 
   return (
   <div>
-
+      <div id="title-container">
       <div className="right">
         <img alt="Network logo" className="logo" src={network.includes("Polygon") ? '/polygonlogo.png' : '/ethlogo.png'} />
         {currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p>}
+        </div>
+        <h1>Alexandria</h1>
       </div>
         <div className="container">
       <div className="header-container">
         <header>
           <div className="left">
-            <p className="title">📚Web3Lib</p>
+            <p className="title">The lost library of Alexandria was </p>
             <p className="subtitle">Read, Read, Read</p>
           </div>
 

@@ -42,8 +42,8 @@ contract MarketPlace {
 
     function borrowNFT(uint256 _tokenId) public payable {
         // charge user
-        require(nftContract.ownerOf(_tokenId) == address(this));
-        require(msg.value > idToBook[_tokenId].price);
+        require(nftContract.ownerOf(_tokenId) == address(this), "!sale");
+        require(msg.value > idToBook[_tokenId].price, "!eth");
         nftContract.lendKey(address(this), msg.sender, _tokenId);
         uint timeForBorrow = msg.value / idToBook[_tokenId].price * cycle;
         uint expiration = block.timestamp + timeForBorrow;
@@ -52,7 +52,7 @@ contract MarketPlace {
     }
 
     function returnNFT(uint256 _tokenId) public {
-        require(nftContract.ownerOf(_tokenId) == msg.sender);
+        require(nftContract.ownerOf(_tokenId) == msg.sender, "!owner");
         // calculate amount to pay back
             nftContract.unlendKey(address(this), _tokenId);
         if (idToDeets[_tokenId].expiration < block.timestamp) {
