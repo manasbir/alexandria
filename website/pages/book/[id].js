@@ -14,7 +14,7 @@ const Book = () => {
         </h1>
 
         <Document file="http://160592857366.free.fr/joe/ebooks/ShareData/The%20Republic%20by%20Plato.pdf">
-            <Page></Page>
+            <Page/>
         </Document>
         </>
     )
