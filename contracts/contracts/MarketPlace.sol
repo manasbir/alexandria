@@ -96,6 +96,6 @@ contract MarketPlace {
     function authorClaim () public {
         require(authorOwed[msg.sender] > 0);
         (bool sent,) = msg.sender.call{value: authorOwed[msg.sender]}("");
-        deleteauthorOwed[msg.sender];
+        delete authorOwed[msg.sender];
     }
 }
