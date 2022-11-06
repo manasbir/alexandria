@@ -3,15 +3,6 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 const market = require("../public/MarketPlace.json");
 import Head from 'next/head'
-import twitterLogo from './twitter-logo.svg';
-
-const TWITTER_HANDLE1 = 'a_f_gio';
-const TWITTER_HANDLE2 = 'manazane';
-const TWITTER_HANDLE3 = 'OmniscientHrzn';
-
-const TWITTER_LINK1 = `https://twitter.com/${TWITTER_HANDLE1}`;
-const TWITTER_LINK2 = `https://twitter.com/${TWITTER_HANDLE2}`;
-const TWITTER_LINK3 = `https://twitter.com/${TWITTER_HANDLE3}`;
 
 
 export default function Home() {
@@ -144,35 +135,11 @@ export default function Home() {
 			</div>
       </div>
 
-      <div className="footer-container">
-					<p className="">Built by:</p>
-					<img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-					<a
-						className="footer-text"
-						href={TWITTER_LINK1}
-						target="_blank"
-						rel="noreferrer"
-					>{`@${TWITTER_HANDLE1}`}</a>
-					<img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-					<a
-						className="footer-text"
-						href={TWITTER_LINK2}
-						target="_blank"
-						rel="noreferrer"
-					>{`@${TWITTER_HANDLE2}`}</a>
-					<img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
-					<a
-						className="footer-text"
-						href={TWITTER_LINK3}
-						target="_blank"
-						rel="noreferrer"
-					>{`@${TWITTER_HANDLE3}`}</a>
-  </div>
-
   
     </div>
 
 
   )
+
 
 }
