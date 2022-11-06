@@ -1,7 +1,5 @@
-// import '../styles/globals.css'
-import '../styles/App.css';
+import '../styles/globals.css'
 import React, { useEffect, useState } from "react";
-import { networks } from '../utils/networks';
 
 
 
@@ -68,20 +66,20 @@ function MyApp({ Component, pageProps }) {
   return (
   <div>
 
-    
+      <div className="right">
+        <img alt="Network logo" className="logo" src={network.includes("Polygon") ? '/polygonlogo.png' : '/ethlogo.png'} />
+        {currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p>}
+      </div>
         <div className="container">
       <div className="header-container">
-      {!currentAccount && renderNotConnectedContainer()}
         <header>
           <div className="left">
             <p className="title">📚Web3Lib</p>
             <p className="subtitle">Read, Read, Read</p>
           </div>
 
-          <div className="right">
-            <img alt="Network logo" className="logo" src={ network.includes("Polygon") ? '/polygonlogo.png' : '/ethlogo.png'} />
-            { currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p> }
-          </div>
+          
+            {!currentAccount && renderNotConnectedContainer()}
 
         </header>
 

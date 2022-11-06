@@ -74,7 +74,11 @@ const connectWallet = async () => {
         book = "https://www.gutenberg.org/files/6130/old/6130-pdf.pdf" // iliad
     } else if (id == 5) {
         book = "https://www.gutenberg.org/cache/epub/28/pg28-images.html" // aesop fable
+    } else if (id > 5) {
+        id = 1;
     }
+
+
     return(
         <div>
         <h1 style={{

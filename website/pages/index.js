@@ -1,11 +1,14 @@
 import { networks } from '../utils/networks';
 import React, { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import MarketPlace from "../../../contracts/artifacts/contracts/MarketPlace.sol/MarketPlace.json";
+
 
 export default function Home() {
 
+  const MARKET_ADDRESS = "0x87DcCE68e38DA2c9B8D8577fB1AdA5Cc3baA5A72";
+
   const [currentAccount, setCurrentAccount] = useState('');
-  const [network, setNetwork] = useState('');
-  const [searchInput, setSearchInput] = useState('');
 
   const connectWallet = async () => {
     try {
@@ -45,6 +48,34 @@ export default function Home() {
       console.log('No authorized account found');
     }
   };
+
+
+  const callBorrowNft = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(MARKET_ADDRESS, MarketPlace.abi, signer);
+  
+        console.log("Going to pop wallet now to pay gas...")
+        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseEther(price)});
+        // Wait for the transaction to be mined
+        const receipt = await tx.wait();
+  
+        // Check if the transaction was successfully completed
+        if (receipt.status === 1) {
+          console.log("Done! https://mumbai.polygonscan.com/tx/"+tx.hash);
+                  }
+        else {
+          alert("Transaction failed! Please try again");
+        }
+      }
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
 
 
 
