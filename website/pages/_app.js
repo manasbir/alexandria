@@ -1,5 +1,5 @@
 // import '../styles/globals.css'
-import '../styles/App.css';
+import '../styles/globals.css';
 import React, { useEffect, useState } from "react";
 import { networks } from '../utils/networks';
 
@@ -21,7 +21,7 @@ function MyApp({ Component, pageProps }) {
       }
 
       const accounts = await ethereum.request({ method: "eth_requestAccounts" });
-    
+
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
     } catch (error) {
@@ -50,11 +50,11 @@ function MyApp({ Component, pageProps }) {
     }
   };
 
-   const renderNotConnectedContainer = () => (
+  const renderNotConnectedContainer = () => (
     <div className="connect-wallet-container">
-      {/* <img src="https://media.giphy.com/media/3ohhwytHcusSCXXOUg/giphy.gif" alt="Ninja donut gif" /> */}
-      {/* Call the connectWallet function we just wrote when the button is clicked */}
-      <button onClick={connectWallet} className="cta-button connect-wallet-button">
+      {/* <img src="https://media.giphy.com/media/3ohhwytHcusSCXXOUg/giphy.gif" alt="Ninja donut gif" /> */ }
+      {/* Call the connectWallet function we just wrote when the button is clicked */ }
+      <button onClick={ connectWallet } className="cta-button connect-wallet-button">
         Connect Wallet
       </button>
     </div>
@@ -66,38 +66,41 @@ function MyApp({ Component, pageProps }) {
 
 
   return (
-  <div>
+    <div>
 
-    
-        <div className="container">
-      <div className="header-container">
-      {!currentAccount && renderNotConnectedContainer()}
-        <header>
-          <div className="left">
-            <p className="title">📚Web3Lib</p>
-            <p className="subtitle">Read, Read, Read</p>
-          </div>
 
-          <div className="right">
-            <img alt="Network logo" className="logo" src={ network.includes("Polygon") ? '/polygonlogo.png' : '/ethlogo.png'} />
-            { currentAccount ? <p> Wallet: {currentAccount.slice(0, 6)}...{currentAccount.slice(-4)} </p> : <p> Not connected </p> }
-          </div>
+      <div className="container">
+        <div className="header-container">
+          <h1 className="title">Alexandria</h1>
 
-        </header>
+          <header>
 
-     
-          {/* the search bar */}
-          <div className='search'>
-          <input type='search' placeholder='search books'></input>
-          </div>
-       
+            <div id="wallet-container">
+              <div className='search'>
+                <input type='search' placeholder='search books'></input>
+              </div>
+
+              <div className="wallet">
+                <img alt="Network logo" className="logo" src={ network.includes("Polygon") ? '/polygonlogo.png' : '/ethlogo.png' } />
+                { currentAccount ? <p> Wallet: { currentAccount.slice(0, 6) }...{ currentAccount.slice(-4) } </p> : <p> Not connected </p> }
+              </div>
+            </div>
+
+            { !currentAccount && renderNotConnectedContainer() }
+
+          </header>
+          {/* { !currentAccount && renderNotConnectedContainer() } */ }
+
+          {/* the search bar */ }
+
+
+        </div>
       </div>
+      <Component { ...pageProps } />
+
+
+
     </div>
-    <Component {...pageProps} />
-
-    
-
-  </div>
   )
 }
 
