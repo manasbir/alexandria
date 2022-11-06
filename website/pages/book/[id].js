@@ -1,8 +1,66 @@
 import {useRouter} from 'next/router'
+import IPublicLock from "../../../contracts/artifacts/@unlock-protocol/contracts/dist/PublicLock/IPublicLockV12.sol/IPublicLock.json";
+import { ethers } from "ethers";
+import { useState } from "react";
 
 
-const Book = () => {
 
+function Book()  {
+
+    let isOwner = 0;
+    const NFT_ADDRESS = "0xf3615f621867fd140452094f8dc6fd507f7077f3";
+    const [currentAccount, setCurrentAccount] = useState('');
+
+//connect wallet:
+const connectWallet = async () => {
+    try {
+      const { ethereum } = window;
+
+      if (!ethereum) {
+        alert("Get MetaMask -> https://metamask.io/");
+        return;
+      }
+
+      const accounts = await ethereum.request({ method: "eth_requestAccounts" });
+    
+      console.log("Connected", accounts[0]);
+      setCurrentAccount(accounts[0]);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  
+  const checkIfWalletIsConnected = async () => {
+    const { ethereum } = window;
+
+    if (!ethereum) {
+      console.log('Make sure you have metamask!');
+      return;
+    } else {
+        console.log('We have the ethereum object', ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const connectedContract = new ethers.Contract(NFT_ADDRESS, IPublicLock.abi, signer);
+        const nft = await connectedContract.ownerOf(id); 
+        if (nft == currentAccount) {
+            isOwner = 1;
+        } else {
+            alert("You do not have access to this book");
+        }
+    }
+
+    const accounts = await ethereum.request({ method: 'eth_accounts' });
+
+    if (accounts.length !== 0) {
+      const account = accounts[0];
+      console.log('Found an authorized account:', account);
+      setCurrentAccount(account);
+    } else {
+      console.log('No authorized account found');
+    }
+  };
+    
     const router = useRouter()
     const id = router.query.id
     let book;
@@ -20,14 +78,16 @@ const Book = () => {
     return(
         <div>
         <h1 style={{
-            color: 'black'
+            opacity : isOwner ? 0 : 1
         }}>
-            this is book{id}
+            YOU DO NOT HAVE ACCESS
         </h1>
 
-        <iframe src= {book}></iframe>
-         </div>
+        <iframe src={book} style={{opacity: isOwner}}></iframe>
+        </div>
     )
 }
 
 export default Book;
+
+
