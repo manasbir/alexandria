@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
 const market = require("../public/MarketPlace.json");
 import Head from 'next/head'
-import twitterLogo from './assets/twitter-logo.svg';
+import twitterLogo from './twitter-logo.svg';
 
 
 export default function Home() {
