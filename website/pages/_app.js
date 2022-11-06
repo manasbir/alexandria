@@ -85,9 +85,9 @@ function MyApp({ Component, pageProps }) {
 
      
           {/* the search bar */}
-          <div className='search'>
+          {/* <div className='search'>
           <input type='search' placeholder='search books'></input>
-          </div>
+          </div> */}
        
       </div>
     </div>

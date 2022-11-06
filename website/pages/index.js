@@ -10,6 +10,7 @@ export default function Home() {
 
   const [currentAccount, setCurrentAccount] = useState('');
   const [days, setDays] = useState('');
+  const [tokenId, setTokenId] = useState('');
 
   const connectWallet = async () => {
     try {
@@ -78,8 +79,12 @@ export default function Home() {
     }
   }
 
+  // let form = document.querySelector('form');
+  // form.addEventListener(change, () => {
+  //   setTokenId(form.option.value)
+  // })
 
-
+ 
   useEffect(() => {
 		checkIfWalletIsConnected();
 	}, [])
@@ -87,19 +92,21 @@ export default function Home() {
   return (
     <div className='App'>
       
-      <form action="/action_page.php">
+     
         <label for="Books">Choose a book:</label>
-        <select name="Books" id="books">
-          <option value="platosrepublic">Plato's Republic</option>
-          <option value="medea">Medea</option>
-          <option value="odyssey">Odyssey</option>
-          <option value="iliad">Iliad</option>
-          <option value="aesop" >Aesop's Fables</option>
+        <select value={tokenId} name="Books" id="books" onChange={(x) => console.log(x.target.value)}>
+          <option value="1">Plato's Republic</option>
+          <option value="2">Medea</option>
+          <option value="3">Odyssey</option>
+          <option value="4">Iliad</option>
+          <option value="5" >Aesop's Fables</option>
         </select>
-      </form>
+    
 
       <div className="form-container">
-						<input
+      <label for="days">How many days do you want to borrow this book for?</label>
+        <input
+          id="days"
 							type="text"
 							value={days}
 							placeholder='How many days?'
@@ -112,6 +119,8 @@ export default function Home() {
 						</button>
 			</div>
       </div>
+
+  
     </div>
 
 
