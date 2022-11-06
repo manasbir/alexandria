@@ -1,22 +1,25 @@
 import {useRouter} from 'next/router'
-import { Document, Page } from 'react-pdf';
+import { Document, Page } from 'react-pdf/renderer';
+import React, { useState } from 'react';
 
 const Book = () => {
 
+    const [numPages, setNumPages] = useState(null);
+    const [pageNumber, setPageNumber] = useState(1);
+    function onDocumentLoadSuccess({ numPages }) {
+        setNumPages(numPages);
+    }
     const router = useRouter()
     const id = router.query.id
     return(
-        <>
-        <h1 style={{
-            color: 'black'
-        }}>
-            this is book{id}
-        </h1>
-
-        <Document file="http://160592857366.free.fr/joe/ebooks/ShareData/The%20Republic%20by%20Plato.pdf">
-            <Page/>
-        </Document>
-        </>
+        <div>
+            <Document file="./The Republic by Plato.pdf" onLoadSuccess={onDocumentLoadSuccess}>
+                <Page pageNumber={pageNumber} />
+            </Document>
+            <p>
+                Page {pageNumber} of {numPages}
+            </p>
+        </div>
     )
 
     
