@@ -14,7 +14,7 @@ async function main() {
   console.log("Account balance:", (await deployer.getBalance()).toString());
 
   const MarketPlace = await ethers.getContractFactory("MarketPlace");
-  const marketPlace = await MarketPlace.deploy();
+  const marketPlace = await MarketPlace.deploy("0xbfa73bc5542183dc4fc169da5f7690d971949304");
 
   console.log("Token address:", marketPlace.address);
 }
