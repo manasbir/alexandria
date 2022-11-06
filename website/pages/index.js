@@ -68,7 +68,7 @@ export default function Home() {
         amount = ethers.utils.formatUnits(amount.toString())
         console.log(amount);
         let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseEther(amount)});
-        alert(`go to : https://alexandria-lib.vercel.app/${tokenId}}`);
+        alert(`go to : https://alexandria-omega.vercel.app/book/${tokenId}`);
         
         // (ethers.utils.formatUnits(amount.toString()))
         // Wait for the transaction to be mined
