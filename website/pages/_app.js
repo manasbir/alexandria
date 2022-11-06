@@ -65,6 +65,8 @@ function MyApp({ Component, pageProps }) {
 
   return (
   <div>
+    
+
       <div id="title-container">
       <div className="right">
         <img alt="Network logo" className="logo" src={network.includes("Polygon") ? '/polygonlogo.png' : '/ethlogo.png'} />
