@@ -1,7 +1,7 @@
 import { networks } from '../utils/networks';
 import React, { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import MarketPlace from "../../../contracts/artifacts/contracts/MarketPlace.sol/MarketPlace.json";
+import MarketPlace from "../public/MarketPlace.json";
 
 
 export default function Home() {
@@ -9,6 +9,7 @@ export default function Home() {
   const MARKET_ADDRESS = "0x87DcCE68e38DA2c9B8D8577fB1AdA5Cc3baA5A72";
 
   const [currentAccount, setCurrentAccount] = useState('');
+  const [days, setDays] = useState('');
 
   const connectWallet = async () => {
     try {
@@ -59,13 +60,13 @@ export default function Home() {
         const contract = new ethers.Contract(MARKET_ADDRESS, MarketPlace.abi, signer);
   
         console.log("Going to pop wallet now to pay gas...")
-        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseEther(price)});
+        let tx = await contract.borrowNFT(tokenId, {value: ethers.utils.parseEther(1000/15*days)});
         // Wait for the transaction to be mined
         const receipt = await tx.wait();
   
         // Check if the transaction was successfully completed
         if (receipt.status === 1) {
-          console.log("Done! https://mumbai.polygonscan.com/tx/"+tx.hash);
+          console.log("Done! https://https://goerli.etherscan.io/tx/"+tx.hash);
                   }
         else {
           alert("Transaction failed! Please try again");
@@ -97,8 +98,23 @@ export default function Home() {
         </select>
       </form>
 
+      <div className="form-container">
+						<input
+							type="text"
+							value={days}
+							placeholder='How many days?'
+							onChange={e => setDays(e.target.value)}
+						/>
+
+            <div className="button-container">
+							<button disabled={null} onClick={callBorrowNft}>
+							Borrow
+						</button>
+			</div>
+      </div>
     </div>
 
 
   )
+
 }

@@ -1,5 +1,5 @@
 import {useRouter} from 'next/router'
-import IPublicLock from "../../../contracts/artifacts/@unlock-protocol/contracts/dist/PublicLock/IPublicLockV12.sol/IPublicLock.json";
+import IPublicLock from "../../public/IPublicLock.json";
 import { ethers } from "ethers";
 import { useState } from "react";
 
@@ -62,7 +62,7 @@ const connectWallet = async () => {
   };
     
     const router = useRouter()
-    const id = router.query.id
+    let id = router.query.id
     let book;
     if (id == 1) {
         book = "http://160592857366.free.fr/joe/ebooks/ShareData/The%20Republic%20by%20Plato.pdf" // plato the republic

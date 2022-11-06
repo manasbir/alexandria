@@ -34,7 +34,27 @@ h1 {
   text-shadow: 3px 3px 0px #ddd4cf;
 }
 
-.wallet-container {
+.right {
+  margin-top: 10px;
+  display: flex;
+  border-radius: 18px;
+  background: rgb(82, 79, 79, 0.5);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 14px;
+    color: #FCFCFD;
+    font-weight: 400;
+    line-height: 1.4;
+    height: 50px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 200px;
+}
+
+.logo {
+  margin-right: 5px;
+}
+
+#wallet-container {
   display: flex;
 }
 
@@ -58,7 +78,7 @@ header {
 
 button {
   margin: auto;
-  width: 50%;
+  width: 200px;
   display: flex;
   align-items: center;
   appearance: none;
@@ -111,3 +131,4 @@ button:active {
   box-shadow: #D6D6E7 0 3px 7px inset;
   transform: translateY(2px);
 }
+
