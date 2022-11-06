@@ -76,7 +76,7 @@ function MyApp({ Component, pageProps }) {
       <div className="header-container">
         <header>
           <div className="left">
-              <p className="title">Welcome to the lost library pf Alexandria</p>
+              <p className="title">Welcome to the lost library of Alexandria</p>
               {!currentAccount && renderNotConnectedContainer()}
               <Component {...pageProps} />
           </div>         
