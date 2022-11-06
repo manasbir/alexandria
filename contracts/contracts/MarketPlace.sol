@@ -93,6 +93,10 @@ contract MarketPlace {
         delete authorOwed[_oldAuthor];
     }
 
+    function changeNFT(address _newNFT) public onlyOwner {
+        nftContract = IPublicLock(_newNFT);
+    }
+
     function authorClaim () public {
         require(authorOwed[msg.sender] > 0);
         (bool sent,) = msg.sender.call{value: authorOwed[msg.sender]}("");
